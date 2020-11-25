@@ -39,6 +39,7 @@ jobs:
 
   deploy:
     name: Deploy the Docker image to GCP Cloud Run (CD)
+    needs: build
     runs-on: ubuntu-latest
     
     steps:
