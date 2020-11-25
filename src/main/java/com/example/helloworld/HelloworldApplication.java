@@ -13,7 +13,7 @@ public class HelloworldApplication {
   class HelloworldController {
     @GetMapping("/")
     String hello(@RequestParam(defaultValue = "World") String name) {
-      return "こんにちわ " + name + "!";
+      return "Good morning " + name + "!";
     }
   }
 
