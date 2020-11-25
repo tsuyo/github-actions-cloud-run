@@ -3,8 +3,8 @@ name: github-actions-cloud-run-jfrog
 on: [push]
 
 jobs:
-  build:
-    name: Build a Spring Boot app and Upload it to Artifactory (CI)
+  maven:
+    name: Build a Spring Boot app, a Docker image and upload them to Artifactory (CI)
     runs-on: ubuntu-latest
 
     steps:
@@ -26,30 +26,41 @@ jobs:
 
       - name: Maven Build & Deploy to Artifactory
         run: |
-          ./mvnw -s settings.xml clean deploy
+          ./mvnw -s settings.xml -DskipTests clean deploy
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_PASS: ${{ secrets.ARTIFACTORY_PASS }}
+
+      - name: Docker Build & Deploy to Artifactory
+        run: |
+          echo ${{ secrets.ARTIFACTORY_PASS }} | docker login -u${{ secrets.ARTIFACTORY_USER }} --password-stdin kirasoa-cicd-docker-dev.jfrog.io
+          docker build -t kirasoa-cicd-docker-dev.jfrog.io/github-actions-cloud-run-jfrog:latest .
+          docker push kirasoa-cicd-docker-dev.jfrog.io/github-actions-cloud-run-jfrog:latest
+
+  # docker:
+  #   name: Build a Docker image and Upload it to Artifactory (CI)
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Build
+  #       run: |
+  #         docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/github-actions-cloud-run-jfrog:latest .
+
+  #     - name: Push
+  #       run: |
+  #         docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/github-actions-cloud-run-jfrog:latest
           
-      - name: Setup GCP Service Account
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          version: 'latest'
-          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+  #     - name: Setup GCP Service Account
+  #       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+  #       with:
+  #         version: 'latest'
+  #         service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+  #         service_account_key: ${{ secrets.GCP_SA_KEY }}
+  #         export_default_credentials: true
 
       # - name: Configure Docker
       #   run: |
       #     gcloud auth configure-docker
-
-      # - name: Build
-      #   run: |
-      #     docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/github-actions-cloud-run-jfrog:latest .
-
-      # - name: Push
-      #   run: |
-      #     docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/github-actions-cloud-run-jfrog:latest
 
       # - name: Deploy
       #   run: |
