@@ -44,6 +44,18 @@
     </dependency>
   </dependencies>
 
+  <distributionManagement>
+    <repository>
+      <id>central</id>
+      <name>cicd-mvn-dev</name>
+      <url>https://kirasoa.jfrog.io/artifactory/cicd-mvn-dev</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>cicd-mvn-dev</name>
+      <url>https://kirasoa.jfrog.io/artifactory/cicd-mvn-dev</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <build>
     <plugins>
