@@ -14,7 +14,7 @@ jobs:
       - name: Setup jfrog cli
         uses: jfrog/setup-jfrog-cli@v1
         env:
-          JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_SECRET_1 }}
+          JF_ARTIFACTORY_1: ${{ secrets.ARTIFACTORY_SECRET_1 }}
 
       - name: Cache local Maven repository
         uses: actions/cache@v2
@@ -33,7 +33,7 @@ jobs:
 
       - name: Docker Build & Deploy to Artifactory
         run: |
-          echo ${{ secrets.JF_ARTIFACTORY_PASS }} | docker login -u${{ secrets.JF_ARTIFACTORY_USER }} --password-stdin kirasoa-cicd-docker-dev.jfrog.io
+          echo ${{ secrets.ARTIFACTORY_PASS }} | docker login -u${{ secrets.ARTIFACTORY_USER }} --password-stdin kirasoa-cicd-docker-dev.jfrog.io
           docker build -t kirasoa-cicd-docker-dev.jfrog.io/github-actions-cloud-run-jfrog:latest .
           jfrog rt build-collect-env
           jfrog rt docker-push kirasoa-cicd-docker-dev.jfrog.io/github-actions-cloud-run-jfrog:latest
