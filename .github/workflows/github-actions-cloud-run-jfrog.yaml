@@ -15,12 +15,13 @@ jobs:
         uses: jfrog/setup-jfrog-cli@v1
         env:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_SECRET_1 }}
-          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-          ARTIFACTORY_PASS: ${{ secrets.ARTIFACTORY_PASS }}
 
       - name: Maven Build & Deploy to Artifactory
         run: |
           ./mvnw -s settings.xml clean deploy
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_PASS: ${{ secrets.ARTIFACTORY_PASS }}
           
       - name: Setup GCP Service Account
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
