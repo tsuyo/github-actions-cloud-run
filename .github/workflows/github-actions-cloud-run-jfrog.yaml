@@ -16,6 +16,14 @@ jobs:
         env:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_SECRET_1 }}
 
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
       - name: Maven Build & Deploy to Artifactory
         run: |
           ./mvnw -s settings.xml clean deploy
@@ -34,7 +42,7 @@ jobs:
       # - name: Configure Docker
       #   run: |
       #     gcloud auth configure-docker
-      
+
       # - name: Build
       #   run: |
       #     docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/github-actions-cloud-run-jfrog:latest .
