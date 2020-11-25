@@ -33,6 +33,8 @@ jobs:
 
       - name: Docker Build & Deploy to Artifactory
         run: |
+          pwd
+          ls -a
           echo ${{ secrets.ARTIFACTORY_PASS }} | docker login -u${{ secrets.ARTIFACTORY_USER }} --password-stdin kirasoa-cicd-docker-dev.jfrog.io
           docker build -t kirasoa-cicd-docker-dev.jfrog.io/github-actions-cloud-run-jfrog:latest .
           docker push kirasoa-cicd-docker-dev.jfrog.io/github-actions-cloud-run-jfrog:latest
