@@ -36,8 +36,9 @@ jobs:
           echo ${{ secrets.ARTIFACTORY_PASS }} | docker login -u${{ secrets.ARTIFACTORY_USER }} --password-stdin kirasoa-cicd-docker-dev.jfrog.io
           docker build -t kirasoa-cicd-docker-dev.jfrog.io/github-actions-cloud-run-jfrog:latest .
           jfrog rt build-collect-env
-          jfrog rt docker-push kirasoa-cicd-docker-dev.jfrog.io/github-actions-cloud-run-jfrog:latest
+          jfrog rt docker-push kirasoa-cicd-docker-dev.jfrog.io/github-actions-cloud-run-jfrog:latest cicd-docker-dev
           jfrog rt build-publish
+          jfrog rt build-scan
 
   deploy:
     name: Deploy the Docker image to GCP Cloud Run (CD)
